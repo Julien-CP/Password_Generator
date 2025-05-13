@@ -64,7 +64,7 @@ mdp = caracteres_obligatoires + [random.choice(caracteres) for _ in range(reste)
 random.shuffle(mdp)  
 
 mot_de_passe = ''.join(mdp)
-print("\nMot de passe généré :", mot_de_passe + "\n")
+print("\nMot de passe généré :", mot_de_passe)
 
 def evaluer_mdp(mdp):
     score = 0
@@ -92,6 +92,19 @@ def evaluer_mdp(mdp):
 
 force = evaluer_mdp(mot_de_passe)
 
-pyperclip.copy(mot_de_passe)
-print("\nMot de passe copié dans le presse-papiers !\n")
+def copie_mdp(question):
+    while True:
+        reponse = input(question + " (y/n) : ").strip().lower()
+        if reponse == 'y':
+            pyperclip.copy(mot_de_passe)
+            print("\nMot de passe copié dans le presse-papiers !\n")
+            return True
+        elif reponse == 'n':
+            print("\nMot de passe non copié.\n")
+            return False
+        else:
+            print("Réponse invalide. Veuillez répondre par 'y' ou 'n'.")
+
+copie_mdp("Voulez-vous copier le mot de passe dans le presse-papiers ? : ")
+
 
