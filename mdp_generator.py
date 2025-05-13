@@ -2,8 +2,6 @@ import random
 import string
 import pyperclip
 import tkinter as tk
-from tkinter import messagebox
-
 import pyperclip
 
 print("=== Générateur de mot de passe ===")
@@ -75,27 +73,27 @@ def evaluer_mdp(mdp):
     if len(mdp) >= 12:
         score += 1
     else:
-        remarques.append("🔸 Utilisez au moins 12 caractères.")
+        remarques.append("- Utilisez au moins 12 caractères.")
 
     if any(c.islower() for c in mdp):
         score += 1
     else:
-        remarques.append("🔸 Ajoutez des lettres minuscules.")
+        remarques.append("- Ajoutez des lettres minuscules.")
 
     if any(c.isupper() for c in mdp):
         score += 1
     else:
-        remarques.append("🔸 Ajoutez des lettres MAJUSCULES.")
+        remarques.append("- Ajoutez des lettres MAJUSCULES.")
 
     if any(c.isdigit() for c in mdp):
         score += 1
     else:
-        remarques.append("🔸 Ajoutez des chiffres.")
+        remarques.append("- Ajoutez des chiffres.")
 
     if any(c in string.punctuation for c in mdp):
         score += 1
     else:
-        remarques.append("🔸 Ajoutez des symboles (!, @, #, etc).")
+        remarques.append("- Ajoutez des symboles (!, @, #, etc).")
 
     if score <= 2:
         niveau = "Mot de passe faible"
