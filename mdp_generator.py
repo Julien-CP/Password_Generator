@@ -1,6 +1,8 @@
 import random
 import string
 import pyperclip
+import tkinter as tk
+from tkinter import messagebox
 
 import pyperclip
 
@@ -54,7 +56,7 @@ if not caracteres:
 # Calcul du reste à générer
 reste = longueur - len(caracteres_obligatoires)
 if reste < 0:
-    print(f"Erreur : Longueur insuffisante pour inclure tous les types demandés. Min = {len(mandatory_chars)}")
+    print(f"Erreur : Longueur insuffisante pour inclure tous les types demandés. Min = {len(caracteres_obligatoires)}")
     exit()
 
 
@@ -68,17 +70,33 @@ print("\nMot de passe généré :", mot_de_passe)
 
 def evaluer_mdp(mdp):
     score = 0
+    remarques = []
+    
     if len(mdp) >= 12:
         score += 1
+    else:
+        remarques.append("🔸 Utilisez au moins 12 caractères.")
+
     if any(c.islower() for c in mdp):
         score += 1
+    else:
+        remarques.append("🔸 Ajoutez des lettres minuscules.")
+
     if any(c.isupper() for c in mdp):
         score += 1
+    else:
+        remarques.append("🔸 Ajoutez des lettres MAJUSCULES.")
+
     if any(c.isdigit() for c in mdp):
         score += 1
+    else:
+        remarques.append("🔸 Ajoutez des chiffres.")
+
     if any(c in string.punctuation for c in mdp):
         score += 1
-    
+    else:
+        remarques.append("🔸 Ajoutez des symboles (!, @, #, etc).")
+
     if score <= 2:
         niveau = "Mot de passe faible"
     elif score == 3:
@@ -88,9 +106,21 @@ def evaluer_mdp(mdp):
     else:
         niveau = "Mot de passe très fort"
 
-    print("Niveau de sécurité de votre mot de passe :", niveau)
+    return niveau, remarques
 
-force = evaluer_mdp(mot_de_passe)
+def analyser_depuis_interface():
+    mot_de_passe = entry.get()
+    niveau, remarques = evaluer_mdp(mot_de_passe)
+
+    result_label.config(text=f"Niveau de sécurité : {niveau}")
+
+    if remarques:
+        conseils_text = "\n".join(remarques)
+    else:
+        conseils_text = "Aucun conseil : excellent mot de passe !"
+
+    conseils_label.config(text=conseils_text)
+
 
 def copie_mdp(question):
     while True:
@@ -107,4 +137,28 @@ def copie_mdp(question):
 
 copie_mdp("Voulez-vous copier le mot de passe dans le presse-papiers ? : ")
 
+# === Interface graphique ===
+root = tk.Tk()
+root.title("Analyseur de mot de passe")
+root.geometry("400x300")
 
+title = tk.Label(root, text="Analyseur de mot de passe", font=("Helvetica", 16, "bold"))
+title.pack(pady=10)
+
+entry = tk.Entry(root, show="*", font=("Helvetica", 12), width=30)
+entry.pack(pady=10)
+
+btn = tk.Button(root, text="Analyser", command=analyser_depuis_interface, font=("Helvetica", 12))
+btn.pack(pady=5)
+
+
+result_label = tk.Label(root, text="", font=("Helvetica", 12, "bold"), fg="blue")
+result_label.pack(pady=5)
+
+texte_info = tk.Label(root, text="Amélioration(s) suggérée(s)", font=("Helvetica", 11))
+texte_info.pack()
+
+conseils_label = tk.Label(root, text="", font=("Helvetica", 10), wraplength=350, justify="left")
+conseils_label.pack(pady=10)
+
+root.mainloop()
